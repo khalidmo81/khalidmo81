@@ -1,0 +1,10 @@
+{
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "deploy-config",
+            "path": "practice/",
+            "label": "npm: deploy-config - practice"
+        }
+    ]
+}

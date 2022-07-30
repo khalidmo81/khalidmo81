@@ -1,3 +1,55 @@
 _schema-version: "3.2"
 ID: khalid_test
 version: 0.0.1
+modules:
+- name: khalid_test-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: khalid_test-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - khalidpractice.zip
+      name: khalidpractice
+      target-path: resources/
+- name: khalidpractice
+  type: html5
+  path: practice
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: khalid_test-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: khalid_test-html5-srv
+    service-plan: app-host
+- name: khalid_test-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: khalid_test-destination-service
+    service-plan: lite
+parameters:
+  deploy_mode: html5-repo
